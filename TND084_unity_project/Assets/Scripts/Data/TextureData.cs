@@ -21,11 +21,13 @@ public class TextureData : UpdatableData
         mat.SetFloatArray("baseBlends", layers.Select(x => x.blendStrenght).ToArray());
         mat.SetFloatArray("baseColorStrength", layers.Select(x => x.tintStrenght).ToArray());
         mat.SetFloatArray("baseTextureScales", layers.Select(x => x.textureScale).ToArray());
+
+        //mat.SetFloatArray("gradientValue", layers.Select(x => x.gradientValue).ToArray());
+
         Texture2DArray textureArray = GenerateTextureArray(layers.Select(x => x.texture).ToArray());
 
         mat.SetTexture("baseTextures", textureArray);
         
-
         UpdateMeshHeight(mat, savedMinHeight, savedMaxHeight);
     }
 
@@ -62,5 +64,7 @@ public class TextureData : UpdatableData
         [Range(0, 1)]
         public float blendStrenght;
         public float textureScale;
+        /*[Range(0, 1)]
+        public float gradientValue;*/
     }
 }

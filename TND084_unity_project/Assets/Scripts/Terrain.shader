@@ -11,7 +11,9 @@ Shader"Custom/Terrain"
         Tags { "RenderType" = "Opaque" }
         LOD 200
 
+        // Defines the shader language, CG, a variant of high level shader language. Needs functions to be declared BEFORE it is called.
         CGPROGRAM
+
         // Physically based Standard lighting model, and enable shadows on all light types
         #pragma surface surf Standard fullforwardshadows
 
@@ -27,6 +29,8 @@ Shader"Custom/Terrain"
         float baseBlends[maxLayerCount];
         float baseColorStrength[maxLayerCount];
         float baseTextureScales[maxLayerCount];
+
+        float gradientValue[maxLayerCount];
 
         float minHeight;
         float maxHeight;
@@ -64,7 +68,7 @@ Shader"Custom/Terrain"
         void surf(Input IN, inout SurfaceOutputStandard o)
         {
             float heightPercent = inverseLerp(minHeight, maxHeight, IN.worldPos.y);
-            //float heightPercent = inverseLerp(minHeight, maxHeight, IN.worldNormal.y); // Using the Gradient instead of height? 
+            //float gradientPercent = inverseLerp(minHeight, maxHeight, IN.worldNormal.y); // Using the Gradient instead of height 
             
             float3 blendAxis = abs(IN.worldNormal);
             blendAxis /= blendAxis.x + blendAxis.y + blendAxis.z;
@@ -72,18 +76,19 @@ Shader"Custom/Terrain"
             for (int i = 0; i < layerCount; i++)
             {
                 float drawStrength = inverseLerp(-baseBlends[i] / 2 - epsilon, baseBlends[i] / 2, heightPercent - baseStartHeights[i]); // clamped to [0,1]. 1 if heightPercent > baseStartHeight, 0 if else
+                //float drawStrength = gradientPercent - gradientValue[i]; // clamped to [0,1]. 1 if gradientPercent > gradientValue, 0 if else        
                 float3 baseColor = baseColors[i] * baseColorStrength[i];
                 float3 textureColor = triplanar(IN.worldPos, baseTextureScales[i], blendAxis, i) * (1 - baseColorStrength[i]);
-                o.Albedo = o.Albedo * (1 - drawStrength) + (baseColor+textureColor) * drawStrength; // if drawStrength is 0 we set it to its org color.
+                o.Albedo = o.Albedo * (1 - drawStrength) + (baseColor+textureColor) * drawStrength; // if drawStrength is 0 we set it to its original color.
                 
                 // Using the Gradient to render the texture
                  /*
-                float drawStrength = inverseLerp(-baseBlends[i] / 2 - epsilon, baseBlends[i] / 2, heightPercent - baseStartHeights[i]); // clamped to [0,1]. 1 if heightPercent > baseStartHeight, 0 if else
+                float drawStrength = inverseLerp(-baseBlends[i] / 2 - epsilon, baseBlends[i] / 2, gradientPercent - baseStartHeights[i]); // clamped to [0,1]. 1 if gradientPercent > baseStartHeight, 0 if else
                 float3 baseColor = baseColors[i] * baseColorStrength[i];
                 float3 textureColor = triplanar(IN.worldPos, baseTextureScales[i], blendAxis, i) * (1 - baseColorStrength[i]);
                 o.Albedo = o.Albedo * (1 - drawStrength) + (baseColor + textureColor) * drawStrength; // if drawStrength is 0 we set it to its org color.
                 */
-    }
+            }
     
             
     

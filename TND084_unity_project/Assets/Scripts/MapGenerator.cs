@@ -2,12 +2,13 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
+using Unity.VisualScripting;
 using UnityEngine;
 //using static Unity.Collections.NativeArray<T>;
 
 public class MapGenerator : MonoBehaviour
 {
-    public enum DrawMode {NoiseMap, Mesh, FalloffMap}; //, ColorMap
+    public enum DrawMode {NoiseMap, Mesh, FalloffMap/*, Gradient*/}; //, ColorMap
     public DrawMode drawMode;//= DrawMode.NoiseMap;
 
     public TerrainData terrainData;
@@ -69,6 +70,10 @@ public class MapGenerator : MonoBehaviour
         {
             display.DrawTexture(TextureGenerator.TextureFromHeightMap(FallOffGenerator.GenerateFallOffMap(mapChunkSize)));
         }
+        /*else if (drawMode == DrawMode.Gradient)
+        {
+            display.DrawTexture(TextureGenerator.TextureFromHeightMap(mapData.gradient));
+        }*/
     }
 
     public void RequestMapData(Action<MapData> callback)
@@ -222,11 +227,13 @@ public struct MapData
 {
     public readonly float[,] heightMap;
     //public readonly Color[] colourMap;
+    //public readonly float gradientMap;
 
     // constructor
-    public MapData(float[,] heightMap/*, Color[] colourMap*/)
+    public MapData(float[,] heightMap/*, float[,] gradientMap, Color[] colourMap*/)
     {
         this.heightMap = heightMap;
         //this.colourMap = colourMap;
+        //this.gradientMap = ;
     }
 }
