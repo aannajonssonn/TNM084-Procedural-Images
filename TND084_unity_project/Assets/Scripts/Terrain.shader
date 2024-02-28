@@ -67,8 +67,28 @@ Shader"Custom/Terrain"
         // Sets the color of the pixel using SurfaceOutputStandard by setting its Albedo property
         void surf(Input IN, inout SurfaceOutputStandard o)
         {
+    
             float heightPercent = inverseLerp(minHeight, maxHeight, IN.worldPos.y);
-            //float gradientPercent = inverseLerp(minHeight, maxHeight, IN.worldNormal.y); // Using the Gradient instead of height 
+
+            float3 blendAxis = abs(IN.worldNormal);
+            blendAxis /= blendAxis.x + blendAxis.y + blendAxis.z;
+    
+            for (int i = 0; i < layerCount; i++)
+            {
+                float heightFactor = inverseLerp(baseStartHeights[i], baseStartHeights[i] + baseBlends[i], IN.worldPos.y);
+                float gradientDot = dot(gradientValue[i], IN.worldNormal);
+    
+            // Adjust the weights based on height and gradient
+                float drawStrength = saturate(heightFactor * gradientDot);
+
+                float3 baseColor = baseColors[i] * baseColorStrength[i];
+                float3 textureColor = triplanar(IN.worldPos, baseTextureScales[i], blendAxis, i) * (1 - baseColorStrength[i]);
+
+                o.Albedo = o.Albedo * (1 - drawStrength) + (baseColor + textureColor) * drawStrength;
+            }
+
+            /*// Height value   
+            float heightPercent = inverseLerp(minHeight, maxHeight, IN.worldPos.y);
             
             float3 blendAxis = abs(IN.worldNormal);
             blendAxis /= blendAxis.x + blendAxis.y + blendAxis.z;
@@ -76,19 +96,27 @@ Shader"Custom/Terrain"
             for (int i = 0; i < layerCount; i++)
             {
                 float drawStrength = inverseLerp(-baseBlends[i] / 2 - epsilon, baseBlends[i] / 2, heightPercent - baseStartHeights[i]); // clamped to [0,1]. 1 if heightPercent > baseStartHeight, 0 if else
-                //float drawStrength = gradientPercent - gradientValue[i]; // clamped to [0,1]. 1 if gradientPercent > gradientValue, 0 if else        
                 float3 baseColor = baseColors[i] * baseColorStrength[i];
                 float3 textureColor = triplanar(IN.worldPos, baseTextureScales[i], blendAxis, i) * (1 - baseColorStrength[i]);
-                o.Albedo = o.Albedo * (1 - drawStrength) + (baseColor+textureColor) * drawStrength; // if drawStrength is 0 we set it to its original color.
+                o.Albedo = o.Albedo * (1 - drawStrength) + (baseColor + textureColor) * drawStrength; // if drawStrength is 0 we set it to its original color.
                 
-                // Using the Gradient to render the texture
-                 /*
-                float drawStrength = inverseLerp(-baseBlends[i] / 2 - epsilon, baseBlends[i] / 2, gradientPercent - baseStartHeights[i]); // clamped to [0,1]. 1 if gradientPercent > baseStartHeight, 0 if else
+            }*/
+    
+            // Gradient
+            /*float gradientPercent = inverseLerp(0, 1, IN.worldNormal.y);
+            float3 blendAxis = abs(IN.worldNormal);
+            blendAxis /= blendAxis.x + blendAxis.y + blendAxis.z;
+
+            for (int i = 0; i < layerCount; i++)
+            {
+                // Assuming gradientValue[i] is a normalized vector pointing in the direction of the desired gradient
+        float drawStrength = inverseLerp(0, 1, gradientValue[i] - gradientPercent); // clamped to [0,1]. 1 if heightPercent > baseStartHeight, 0 if else
+
                 float3 baseColor = baseColors[i] * baseColorStrength[i];
                 float3 textureColor = triplanar(IN.worldPos, baseTextureScales[i], blendAxis, i) * (1 - baseColorStrength[i]);
-                o.Albedo = o.Albedo * (1 - drawStrength) + (baseColor + textureColor) * drawStrength; // if drawStrength is 0 we set it to its org color.
-                */
-            }
+                o.Albedo = o.Albedo * (1 - drawStrength) + (baseColor + textureColor) * drawStrength;
+            }*/
+        
     
             
     
