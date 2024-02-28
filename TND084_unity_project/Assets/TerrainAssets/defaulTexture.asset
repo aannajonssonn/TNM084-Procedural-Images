@@ -18,55 +18,63 @@ MonoBehaviour:
     tint: {r: 0, g: 0.105545454, b: 0.3679245, a: 0}
     tintStrenght: 0.444
     startHeight: 0
-    blendStrenght: 0.217
+    blendStrenght: 0
     textureScale: 20
-    gradientValue: 1
+    gradientValue: 0
+    gradientSwitch: 0
   - texture: {fileID: 2800000, guid: c6396fb416534d641bb49afcb59d046c, type: 3}
-    tint: {r: 0, g: 0.9743352, b: 1, a: 0}
+    tint: {r: 0, g: 0.58059883, b: 1, a: 0}
     tintStrenght: 0.693
-    startHeight: 0.081
-    blendStrenght: 0.103
+    startHeight: 0.062
+    blendStrenght: 0.1
     textureScale: 20
-    gradientValue: 1
+    gradientValue: 0
+    gradientSwitch: 0
   - texture: {fileID: 2800000, guid: a3bf1e8343550974e8e2c50563194eee, type: 3}
     tint: {r: 1, g: 0.9600675, b: 0.71132076, a: 0}
     tintStrenght: 0.094
-    startHeight: 0.089
-    blendStrenght: 0.071
+    startHeight: 0.072
+    blendStrenght: 0.018
     textureScale: 5
-    gradientValue: 1
+    gradientValue: 0
+    gradientSwitch: 0
   - texture: {fileID: 2800000, guid: 50a7413b229a348499fb83d7cfb041cf, type: 3}
     tint: {r: 0.1318093, g: 0.4433962, b: 0.10624775, a: 0}
     tintStrenght: 0.22
     startHeight: 0.1
-    blendStrenght: 0.086
-    textureScale: 10
-    gradientValue: 1
+    blendStrenght: 0.059
+    textureScale: 20
+    gradientValue: 0
+    gradientSwitch: 0
   - texture: {fileID: 2800000, guid: ffbd9f9a6d24db44fae1a75807e7c6ef, type: 3}
     tint: {r: 0.4433962, g: 0.36471134, b: 0.26980242, a: 0}
-    tintStrenght: 0.247
-    startHeight: 0.325
-    blendStrenght: 0.214
+    tintStrenght: 0.437
+    startHeight: 0.3
+    blendStrenght: 0.353
     textureScale: 20
-    gradientValue: 1
+    gradientValue: 0.764
+    gradientSwitch: 1
   - texture: {fileID: 2800000, guid: 97240947b5b575f43bf7c731abdf4c21, type: 3}
     tint: {r: 0.3207547, g: 0.27287343, b: 0.18912424, a: 0}
     tintStrenght: 0.697
-    startHeight: 0.617
-    blendStrenght: 0.258
+    startHeight: 0.5
+    blendStrenght: 0.226
     textureScale: 20
-    gradientValue: 0.077
+    gradientValue: 0.882
+    gradientSwitch: 1
   - texture: {fileID: 2800000, guid: 17e66183f3e3f514ab0236d6fc1b2844, type: 3}
     tint: {r: 0.31132078, g: 0.2763916, b: 0.2569865, a: 0}
     tintStrenght: 0
-    startHeight: 0.219
-    blendStrenght: 0.241
+    startHeight: 0
+    blendStrenght: 0.172
     textureScale: 20
-    gradientValue: 0.366
+    gradientValue: 0.792
+    gradientSwitch: 1
   - texture: {fileID: 2800000, guid: 4cdc4705df37eae43b96659488da38d7, type: 3}
     tint: {r: 1, g: 1, b: 1, a: 0}
     tintStrenght: 0.579
-    startHeight: 0.791
-    blendStrenght: 0.556
+    startHeight: 0.919
+    blendStrenght: 0.602
     textureScale: 20
-    gradientValue: 0.031
+    gradientValue: 0
+    gradientSwitch: 0

@@ -9,7 +9,6 @@ public class TextureData : UpdatableData
     const int textureSize = 512;
     const TextureFormat textureFormat = TextureFormat.RGB565;
 
-
     public Layer[] layers;
 
     float savedMinHeight;
@@ -24,6 +23,7 @@ public class TextureData : UpdatableData
         mat.SetFloatArray("baseTextureScales", layers.Select(x => x.textureScale).ToArray());
 
         mat.SetFloatArray("gradientValue", layers.Select(x => x.gradientValue).ToArray());
+        mat.SetFloatArray("gradientSwitch", layers.Select(x => x.gradientSwitch).ToArray());
 
         Texture2DArray textureArray = GenerateTextureArray(layers.Select(x => x.texture).ToArray());
 
@@ -69,5 +69,7 @@ public class TextureData : UpdatableData
         public float textureScale;
         [Range(0, 1)]
         public float gradientValue;
+        [Range(0, 1)]
+        public float gradientSwitch;
     }
 }

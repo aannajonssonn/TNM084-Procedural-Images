@@ -8,7 +8,7 @@ using UnityEngine;
 
 public class MapGenerator : MonoBehaviour
 {
-    public enum DrawMode {NoiseMap, Mesh, FalloffMap/*, Gradient*/}; //, ColorMap
+    public enum DrawMode {NoiseMap, Mesh, FalloffMap}; //, ColorMap
     public DrawMode drawMode;//= DrawMode.NoiseMap;
 
     public TerrainData terrainData;
@@ -70,10 +70,6 @@ public class MapGenerator : MonoBehaviour
         {
             display.DrawTexture(TextureGenerator.TextureFromHeightMap(FallOffGenerator.GenerateFallOffMap(mapChunkSize)));
         }
-        /*else if (drawMode == DrawMode.Gradient)
-        {
-            display.DrawTexture(TextureGenerator.TextureFromHeightMap(mapData.gradient));
-        }*/
     }
 
     public void RequestMapData(Action<MapData> callback)
@@ -169,7 +165,7 @@ public class MapGenerator : MonoBehaviour
 
         textureData.UpdateMeshHeight(terrainMaterial, terrainData.minHeight, terrainData.maxHeight);
 
-        return new MapData(noiseMap/*, colorMap*/);
+        return new MapData(noiseMap);
 
     }
 

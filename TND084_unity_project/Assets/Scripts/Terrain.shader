@@ -29,7 +29,8 @@ Shader"Custom/Terrain"
         float baseBlends[maxLayerCount];
         float baseColorStrength[maxLayerCount];
         float baseTextureScales[maxLayerCount];
-
+        
+        float gradientSwitch[maxLayerCount];
         float gradientValue[maxLayerCount];
 
         float minHeight;
@@ -68,26 +69,7 @@ Shader"Custom/Terrain"
         void surf(Input IN, inout SurfaceOutputStandard o)
         {
     
-            float heightPercent = inverseLerp(minHeight, maxHeight, IN.worldPos.y);
-
-            float3 blendAxis = abs(IN.worldNormal);
-            blendAxis /= blendAxis.x + blendAxis.y + blendAxis.z;
-    
-            for (int i = 0; i < layerCount; i++)
-            {
-                float heightFactor = inverseLerp(baseStartHeights[i], baseStartHeights[i] + baseBlends[i], IN.worldPos.y);
-                float gradientDot = dot(gradientValue[i], IN.worldNormal);
-    
-            // Adjust the weights based on height and gradient
-                float drawStrength = saturate(heightFactor * gradientDot);
-
-                float3 baseColor = baseColors[i] * baseColorStrength[i];
-                float3 textureColor = triplanar(IN.worldPos, baseTextureScales[i], blendAxis, i) * (1 - baseColorStrength[i]);
-
-                o.Albedo = o.Albedo * (1 - drawStrength) + (baseColor + textureColor) * drawStrength;
-            }
-
-            /*// Height value   
+            // Height value   
             float heightPercent = inverseLerp(minHeight, maxHeight, IN.worldPos.y);
             
             float3 blendAxis = abs(IN.worldNormal);
@@ -95,37 +77,34 @@ Shader"Custom/Terrain"
     
             for (int i = 0; i < layerCount; i++)
             {
+        
+                // Calculate blend strength based on gradient (worldNormal y-value)
+                // Clamp to avoid potential issues with extreme angles
+                float gradientStrength = saturate(gradientValue[i] - abs(IN.worldNormal.y));
+
+                // Combine height-based and gradient-based blending
+                float blendFactor = lerp(gradientStrength, heightPercent, 0.2); // Adjust the 0.5 value to balance height and gradient blending
+
                 float drawStrength = inverseLerp(-baseBlends[i] / 2 - epsilon, baseBlends[i] / 2, heightPercent - baseStartHeights[i]); // clamped to [0,1]. 1 if heightPercent > baseStartHeight, 0 if else
                 float3 baseColor = baseColors[i] * baseColorStrength[i];
                 float3 textureColor = triplanar(IN.worldPos, baseTextureScales[i], blendAxis, i) * (1 - baseColorStrength[i]);
-                o.Albedo = o.Albedo * (1 - drawStrength) + (baseColor + textureColor) * drawStrength; // if drawStrength is 0 we set it to its original color.
+                if (gradientSwitch[i] == 0)
+                {
+                    o.Albedo = o.Albedo * (1 - drawStrength) + (baseColor + textureColor) * drawStrength; // if drawStrength is 0 we set it to its original color.
+                }
+                else
+                {
+                    o.Albedo = o.Albedo * (1 - blendFactor) + (baseColor + textureColor) * blendFactor;
+                }
                 
-            }*/
-    
-            // Gradient
-            /*float gradientPercent = inverseLerp(0, 1, IN.worldNormal.y);
-            float3 blendAxis = abs(IN.worldNormal);
-            blendAxis /= blendAxis.x + blendAxis.y + blendAxis.z;
-
-            for (int i = 0; i < layerCount; i++)
-            {
-                // Assuming gradientValue[i] is a normalized vector pointing in the direction of the desired gradient
-        float drawStrength = inverseLerp(0, 1, gradientValue[i] - gradientPercent); // clamped to [0,1]. 1 if heightPercent > baseStartHeight, 0 if else
-
-                float3 baseColor = baseColors[i] * baseColorStrength[i];
-                float3 textureColor = triplanar(IN.worldPos, baseTextureScales[i], blendAxis, i) * (1 - baseColorStrength[i]);
-                o.Albedo = o.Albedo * (1 - drawStrength) + (baseColor + textureColor) * drawStrength;
-            }*/
-        
-    
-            
+            }
     
         }
 
         ENDCG
     }
 
-    FallBack "Diffuse"
+FallBack"Diffuse"
 }
 
 /*

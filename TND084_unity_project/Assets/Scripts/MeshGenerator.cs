@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
+using static MapGenerator;
 
 public static class MeshGenerator
 {
@@ -23,6 +24,7 @@ public static class MeshGenerator
         int[,] vertexIndexMap = new int[borderedSize, borderedSize];
         int meshVertexIndex = 0;
         int borderedVertexIndex = -1;
+
 
         int centerVertex = 0;
         int rightVertex = 0;
@@ -75,6 +77,7 @@ public static class MeshGenerator
                     meshData.AddTriangle(a, c, d); //ÖHHH
                     meshData.AddTriangle(d, b, a); //OMGEALUL
 
+
                     if (vertexIndex >= 0) // do not include border verticies as they're not part of the mesh
                     {
                         centerVertex = vertexIndex;
@@ -82,7 +85,7 @@ public static class MeshGenerator
                         rightVertex = vertexIndexMap[x + meshSimplificationIncrement, y];
                         bottomVertex = vertexIndexMap[x, y - meshSimplificationIncrement];
 
-                        if ((x-1) == 0)
+                        if ((x - 1) == 0)
                         {
                             leftVertex = centerVertex;
                         }
@@ -91,7 +94,7 @@ public static class MeshGenerator
                             leftVertex = vertexIndexMap[x - meshSimplificationIncrement, y];
                         }
 
-                        if ((y-1) == 0)
+                        if ((y - 1) == 0)
                         {
                             topVertex = centerVertex;
                         }
@@ -102,6 +105,7 @@ public static class MeshGenerator
 
                         meshData.VertexNormalCrossMethod(centerVertex, leftVertex, rightVertex, topVertex, bottomVertex);
                     }
+
                 }
 
                 vertexIndex++;
@@ -217,7 +221,7 @@ public class MeshData
 
         Vector3 n = Vector3.Cross(sideAB, sideCD);
         n.Normalize();
-        vertexNormals[centerVertex] = n *-1;
+        vertexNormals[centerVertex] = n * -1;
 
     }
 
@@ -308,17 +312,14 @@ public class MeshData
         Vector3 sideAB = pointB - pointA;
         Vector3 sideAC = pointA - pointC;
 
-        return Vector3.Cross(sideAB, sideAC).normalized;
+        return Vector3.Cross(sideAB, sideAC).normalized * -1;
     }
 
     // print normals
     public void printNormals(Vector3[] normals)
     {
-        /*for (int i = 0; i < vertices.Length; i += 500)
-        {*/
         Debug.Log("Vertex: " + vertexNormals[50] + "     uni: " + normals[50]);
         Debug.Log("Vertex: " + vertexNormals[3000] + "     uni: " + normals[3000]);
-        //}
     }
 
 
@@ -329,13 +330,13 @@ public class MeshData
         mesh.vertices = vertices;
         mesh.triangles = triangles;
         mesh.uv = uvs;
-        //mesh.RecalculateNormals();
-        //mesh.normals = CalculateNormals(); // triangles
-        //mesh.normals = normalizedVertexNormals(); // cross method
-        mesh.normals = vertexNormals;
+
+        //mesh.RecalculateNormals(); // Unity
+        //mesh.normals = CalculateNormals(); // Triangles average sum
+        mesh.normals = vertexNormals; // Cross method
 
         //Debug.Log("Vertex: " + vertices.Length + "   normals:" + vertexNormals.Length );
-        printNormals(mesh.normals);
+        // printNormals(mesh.normals);
         return mesh;
     }
 }

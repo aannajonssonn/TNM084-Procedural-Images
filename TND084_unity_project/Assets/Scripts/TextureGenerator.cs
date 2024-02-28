@@ -36,23 +36,5 @@ public static class TextureGenerator
         return TextureFromColorMap(colorMap, width, height);
     }
 
-    /*public static Texture2D TextureFromGradient(float[,] heightMap)
-    {
-        
-        // create array for colorMap
-        Color[] colorMap = new Color[width * height];
-
-        // set color of each pixel in texture
-        for (int y = 0; y < height; y++)
-        {
-            for (int x = 0; x < width; x++)
-            {
-                colorMap[y * width + x] = Color.Lerp(Color.black, Color.white, heightMap[x, y]);
-            }
-        }
-
-        return TextureFromColorMap(colorMap, width, height);
-    }*/
-
 }
 
